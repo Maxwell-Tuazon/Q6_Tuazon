@@ -1,26 +1,29 @@
-import React from 'react'
-// import products from '../products'
-
+import React, { useEffect, useState } from 'react'
 import { Row, Col } from 'react-bootstrap'
 import Product from '../components/Product'
-
-import { useEffect } from 'react'
-
-import {useDispatch, useSelector} from 'react-redux'
-import { listProducts } from '../actions/productActions'
-
+import axios from 'axios'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 
 function HomeScreen() {
-    // const [products, setProducts] = useState([])
-    const dispatch = useDispatch()
-    const productList = useSelector(state => state.productList)
-    const {loading, error, products} = productList
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState('')
+    const [services, setServices] = useState([])
 
     useEffect(() => {
-        dispatch(listProducts())
-    }, [dispatch])
+        async function fetchServices() {
+            try {
+                setLoading(true)
+                const { data } = await axios.get('/api/v1/services/list/')
+                setServices(data)
+            } catch (err) {
+                setError(err.response && err.response.data.detail ? err.response.data.detail : err.message)
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchServices()
+    }, [])
 
     return (
         <>
@@ -29,16 +32,16 @@ function HomeScreen() {
             ) : error ? (
                 <Message variant="danger">{error}</Message>
             ) : (
-                products && products.length > 0 ? (
+                services && services.length > 0 ? (
                     <Row>
-                        {products.map((product) => (
-                            <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
-                                <Product product={product} />
+                        {services.map((service) => (
+                            <Col key={service._id} sm={12} md={6} lg={4} xl={3}>
+                                <Product product={service} />
                             </Col>
                         ))}
                     </Row>
                 ) : (
-                    <Message variant="info">No products available.</Message>
+                    <Message variant="info">No services available.</Message>
                 )
             )}
         </>

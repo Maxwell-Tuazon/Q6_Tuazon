@@ -9,38 +9,31 @@ function Header() {
 
   const logoutHandler = () => {
     localStorage.removeItem('userInfo')
-    navigate('/User')
+    navigate('/signin')
   }
   return (
     <Navbar expand="lg" bg='primary' variant='dark' collapseOnSelect>
       <Container>
-        <Navbar.Brand href="/">React-Bootstrap</Navbar.Brand>
+        <Navbar.Brand href="/">Pest & Wildlife Control</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
             {userInfo ? (
-              <NavDropdown title={userInfo.name || userInfo.username || userInfo.email} id='username'>
+              <NavDropdown title={userInfo.first_name || userInfo.username || userInfo.email} id='username'>
+                <LinkContainer to="/profile"><NavDropdown.Item>Profile</NavDropdown.Item></LinkContainer>
+                <LinkContainer to="/seller/dashboard"><NavDropdown.Item>Seller Dashboard</NavDropdown.Item></LinkContainer>
                 <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
               </NavDropdown>
             ) : (
-              <Nav.Link href="/User"><i className="fas fa-user"></i> User</Nav.Link>
+              <>
+                <LinkContainer to="/signin"><Nav.Link>Sign In</Nav.Link></LinkContainer>
+                <LinkContainer to="/signup"><Nav.Link>Sign Up</Nav.Link></LinkContainer>
+              </>
             )}
           <Nav className="me-auto">
-            <Nav.Link href="/">Home</Nav.Link>
-            <LinkContainer to="/chat">
-              <Nav.Link>AI Chatbot</Nav.Link>
-            </LinkContainer>
-
-            <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">
-                Another action
-              </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="#action/3.4">
-                Separated link
-              </NavDropdown.Item>
-            </NavDropdown>
+            <LinkContainer to="/"><Nav.Link>Home</Nav.Link></LinkContainer>
+            <LinkContainer to="/apply-seller"><Nav.Link>Apply Seller</Nav.Link></LinkContainer>
+            <LinkContainer to="/subscriptions"><Nav.Link>Subscriptions</Nav.Link></LinkContainer>
+            <LinkContainer to="/chat"><Nav.Link>AI Chatbot</Nav.Link></LinkContainer>
           </Nav>
         </Navbar.Collapse>
       </Container>
