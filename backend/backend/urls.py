@@ -31,7 +31,7 @@ urlpatterns = [
     path('api/v1/orders/', include('orders.urls')),
     path('api/v1/subscriptions/', include('subscriptions.urls')),
     path('api/v1/chat/', include('chat.urls')),
-    path('api/', include('base.urls')),
+    # removed redundant catch-all API include to avoid duplicate routing
 ]
 
 if settings.DEBUG:
