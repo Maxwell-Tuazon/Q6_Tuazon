@@ -17,15 +17,72 @@ class TierListView(generics.ListAPIView):
         # If no tiers exist yet (fresh DB), create default tiers
         if not qs.exists():
             defaults = [
-                {'name': 'Basic', 'price': '5.00', 'max_usage': 3},
-                {'name': 'Plus', 'price': '9.00', 'max_usage': 5},
+                {'name': 'Basic', 'price': '5.00', 'max_usage': 5},
                 {'name': 'Pro', 'price': '15.00', 'max_usage': 10},
+                {'name': 'Enterprise', 'price': '49.00', 'max_usage': 15},
             ]
             for d in defaults:
                 SubscriptionTier.objects.create(name=d['name'], price=d['price'], max_usage=d['max_usage'])
             qs = self.get_queryset()
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
+
+
+class ActivateSubscriptionView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        sub_id = request.data.get('subscription_id')
+        plan_id = request.data.get('plan_id')
+        if not sub_id:
+            return Response({'error': 'subscription_id required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Try to find tier by plan_id first, then by provided tier id in request
+        tier = None
+        if plan_id:
+            tier = SubscriptionTier.objects.filter(paypal_plan_id=plan_id).first()
+
+        # fallback: if client sent tier id
+        if not tier:
+            tier_id = request.data.get('tier')
+            if tier_id:
+                tier = SubscriptionTier.objects.filter(pk=tier_id).first()
+
+        # If still no tier, pick Basic as safe default
+        if not tier:
+            tier = SubscriptionTier.objects.filter(name__in=['Basic', 'Pro', 'Enterprise']).first()
+
+        us = UserSubscription.objects.create(
+            user=request.user,
+            tier=tier,
+            paypal_subscription_id=sub_id,
+            usage_left=(tier.max_usage if tier else 0),
+            is_active=True,
+        )
+        serializer = UserSubscriptionSerializer(us)
+        return Response(serializer.data)
+
+
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse, HttpResponse
+
+
+@csrf_exempt
+def paypal_webhook(request):
+    # Minimal webhook receiver for demo: log and accept
+    try:
+        import json
+        body = json.loads(request.body.decode('utf-8')) if request.body else {}
+    except Exception:
+        body = {}
+    # Ideally verify signature here using PayPal API; for demo accept and update subscription status
+    event_type = body.get('event_type') if isinstance(body, dict) else None
+    resource = body.get('resource') if isinstance(body, dict) else {}
+    if event_type in ('BILLING.SUBSCRIPTION.CANCELLED', 'BILLING.SUBSCRIPTION.SUSPENDED'):
+        sub_id = resource.get('id')
+        if sub_id:
+            UserSubscription.objects.filter(paypal_subscription_id=sub_id).update(is_active=False)
+    return JsonResponse({'status': 'ok'})
 
 
 class SubscribeView(generics.CreateAPIView):

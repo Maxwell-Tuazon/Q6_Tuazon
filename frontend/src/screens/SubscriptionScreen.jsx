@@ -46,16 +46,18 @@ export default function SubscriptionScreen() {
       const el = document.getElementById(containerId)
       if (!el) return
       if (el.dataset.rendered) return
-      if (!t.paypal_plan_id) return
+      // allow fallback plan id from data attribute (set in render) or from backend
+      const planId = el.getAttribute('data-plan-id') || t.paypal_plan_id
+      if (!planId) return
       try {
         window.paypal.Buttons({
           style: { layout: 'vertical' },
           createSubscription: function (data, actions) {
-            return actions.subscription.create({ plan_id: t.paypal_plan_id })
+            return actions.subscription.create({ plan_id: planId })
           },
           onApprove: async function (data, actions) {
             try {
-              await axios.post('/api/v1/subscriptions/activate/', { subscription_id: data.subscriptionID, plan_id: t.paypal_plan_id })
+              await axios.post('/api/v1/subscriptions/activate/', { subscription_id: data.subscriptionID, plan_id: planId })
               setSuccess(`Subscribed to ${t.name}`)
             } catch (e) {
               console.error('Activation failed', e)
@@ -76,6 +78,12 @@ export default function SubscriptionScreen() {
 
   // Only display the three standard tiers (Basic, Pro, Enterprise)
   const visibleTiers = tiers.filter(t => ['Basic','Pro','Enterprise'].includes(t.name)).slice(0,3)
+  // Fallback sandbox PayPal Plan IDs (created in this sandbox) so demo works even if DB is missing them
+  const planFallback = {
+    Basic: 'P-2EN05913TG392902YNG4YTOQ',
+    Pro: 'P-2BU67616FB707844BNG4YTOY',
+    Enterprise: 'P-0NH2559077874741LNG4YTPI',
+  }
 
   return (
     <>
@@ -89,11 +97,10 @@ export default function SubscriptionScreen() {
                 <Card.Title>{t.name}</Card.Title>
                 <Card.Text>Price: ${t.price}/month</Card.Text>
                 <Card.Text>Uses: {t.max_usage}</Card.Text>
-                {t.paypal_plan_id ? (
-                  <div id={`paypal-button-container-${t.id}`} />
-                ) : (
-                  <div><em>No PayPal Plan ID configured for this tier.</em></div>
-                )}
+                  {(() => {
+                    const planId = t.paypal_plan_id || planFallback[t.name]
+                    return planId ? <div id={`paypal-button-container-${t.id}`} data-plan-id={planId} /> : <div><button className='btn btn-secondary' disabled>Not available</button></div>
+                  })()}
               </Card.Body>
             </Card>
           </Col>
