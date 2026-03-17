@@ -19,7 +19,7 @@ function Service({ service }) {
 
             <Card.Text as='div'>
                 <div className='my-3'>
-                    <Rating value={service.rating} text={`${service.numReviews || 0} reviews`} color={'#f8e825'} />
+                  <Rating value={service.rating} color={'#f8e825'} />
                 </div>
                 <div>{service.description && service.description.substring(0, 120)}{service.description && service.description.length > 120 ? '...' : ''}</div>
             </Card.Text>

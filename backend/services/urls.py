@@ -3,7 +3,8 @@ from .views import ServiceListView, ServiceDetailView, SellerServiceManageView, 
 
 urlpatterns = [
     path('list/', ServiceListView.as_view(), name='service-list'),
-    path('<int:pk>/', ServiceDetailView.as_view(), name='service-detail'),
+    # Accept string pk so static demo entries like 's1' work alongside numeric DB ids
+    path('<str:pk>/', ServiceDetailView.as_view(), name='service-detail'),
     path('manage/', SellerServiceManageView.as_view(), name='seller-manage'),
     path('manage/<int:pk>/', SellerServiceDetailView.as_view(), name='seller-manage-detail'),
 ]

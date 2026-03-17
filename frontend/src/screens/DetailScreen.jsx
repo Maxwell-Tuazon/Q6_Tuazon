@@ -21,12 +21,20 @@ export default function DetailScreen() {
         fetchService();
     }, [id]);
 
+    const imageUrl = service && (service.sample_image || service.image || service.image_url)
+        ? ((service.sample_image || service.image || service.image_url).startsWith('http') ? (service.sample_image || service.image || service.image_url) : `${window.location.origin}${(service.sample_image || service.image || service.image_url)}`)
+        : null
+
     return (
         <div>
             <Link className='btn btn-light my-3' to='/'>Go Back</Link>
             <Row>
                 <Col md={6}>
-                    <Image src={service.sample_image || service.image} alt={service.service_name} fluid />
+                    {imageUrl ? (
+                        <Image src={imageUrl} alt={service.service_name} fluid />
+                    ) : (
+                        <div className='border p-5 text-center text-muted'>No image available</div>
+                    )}
                 </Col>
                 <Col md={6}>
                     <ListGroup variant='flush'>
@@ -34,19 +42,19 @@ export default function DetailScreen() {
                             <h3>{service.service_name}</h3>
                         </ListGroup.Item>
                         <ListGroup.Item>
-                            <Rating value={service.rating} text={`${service.numReviews || 0} reviews`} color={'#f8e825'} />
+                            <Rating value={service.rating} color={'#f8e825'} />
                         </ListGroup.Item>
                         <ListGroup.Item>
-                            Price: ${service.price}
+                            Price: ${service.price || 'N/A'}
                         </ListGroup.Item>
                         <ListGroup.Item>
-                            Duration: {service.duration_of_service}
+                            Duration: {service.duration_of_service || 'N/A'}
                         </ListGroup.Item>
-                            <ListGroup.Item>
-                                Expert: {service.seller_first_name || (service.seller && (service.seller.first_name + ' ' + service.seller.last_name)) || service.seller_email}
-                            </ListGroup.Item>
                         <ListGroup.Item>
-                            Description: {service.description}
+                            Expert: {service.seller_first_name || (service.seller && (service.seller.first_name + ' ' + service.seller.last_name)) || service.seller_email || 'Unknown'}
+                        </ListGroup.Item>
+                        <ListGroup.Item>
+                            Description: {service.description || 'No description available.'}
                         </ListGroup.Item>
                     </ListGroup>
                     <Card className='my-3'>

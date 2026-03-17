@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="400" height="240">
-  <rect width="100%" height="100%" fill="#fff8e1"/>
-  <g fill="#6c757d">
-    <path d="M100 140 q40 -80 160 0" stroke="#6c757d" stroke-width="6" fill="none" />
-    <circle cx="280" cy="90" r="18" />
-  </g>
-  <text x="200" y="40" font-size="20" text-anchor="middle" fill="#343a40">Bird Control</text>
-  <text x="200" y="215" font-size="12" text-anchor="middle" fill="#6c757d">Pest & Wildlife Control — sample image</text>
-</svg>
