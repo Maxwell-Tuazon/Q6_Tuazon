@@ -2,13 +2,16 @@ import React from 'react'
 import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { logout } from '../actions/authActions'
 
 function Header() {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const userInfo = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null
 
   const logoutHandler = () => {
-    localStorage.removeItem('userInfo')
+    dispatch(logout())
     navigate('/signin')
   }
   return (
