@@ -104,3 +104,30 @@ License & contribution
 - This repo has no license file. Add one if you plan to open-source the project.
 
 -- End of README
+
+Site Flow (detailed user journeys)
+
+- Visitor → Browse Services:
+	- Open homepage, view service cards and details.
+	- Click a service to view `DetailScreen` and optional PayPal single-purchase button.
+
+- User → Register / Login:
+	- Register via signup form or login; frontend stores JWT `access`/`refresh` in `localStorage`.
+	- Authenticated requests include `Authorization: Bearer <access>` header.
+
+- Purchase Single Service:
+	- On the service detail page the PayPal Buttons create an order and, on capture, POST to `/api/v1/orders/create/` to record the order and notify the seller.
+
+- Subscribe To Tier:
+	- Open Subscriptions page, choose Basic / Pro / Enterprise.
+	- PayPal subscription flow creates a sandbox subscription; frontend POSTs `subscription_id` and `plan_id` to `/api/v1/subscriptions/activate/` to create a `UserSubscription` record.
+	- Backend updates subscription state via PayPal webhooks at `/api/v1/subscriptions/webhook/` (cancellations/suspensions set `is_active=False`).
+
+- Use Chatbot (consumes usages):
+	- Authenticated users call `/api/v1/chat/ask/`; the server checks the user's active `UserSubscription.usage_left` and decrements it atomically.
+	- The frontend reads `/api/v1/subscriptions/me/` to display `usage_left` in the chat UI.
+
+- Admin / Management:
+	- Admins can view subscriptions, orders, and manage users via admin or admin UI routes.
+
+These flows match the code in `frontend/src/screens/*` and backend endpoints under `backend/subscriptions/`, `backend/orders/` and `backend/chat/`.
