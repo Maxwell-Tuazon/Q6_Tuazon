@@ -31,6 +31,10 @@ class ApproveApplicationView(APIView):
         merchant_id = request.data.get('merchant_id')
         if not merchant_id:
             return Response({'detail': 'merchant_id is required'}, status=status.HTTP_400_BAD_REQUEST)
+        # Prevent approving if already a seller
+        if app.user.role == 'Seller':
+            return Response({'detail': 'User is already a seller'}, status=status.HTTP_400_BAD_REQUEST)
+
         app.status = 'approved'
         app.user.role = 'Seller'
         app.user.merchant_id = merchant_id

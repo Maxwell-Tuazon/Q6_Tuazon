@@ -6,4 +6,4 @@ pillow==12.1.0
 sqlparse==0.5.5
 django-environ==0.12.0
 python-dotenv==1.0.0
-google-genai
+google-genai==1.67.0

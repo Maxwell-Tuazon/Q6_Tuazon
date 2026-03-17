@@ -15,6 +15,8 @@ import SellerDashboard from './screens/SellerDashboard';
 import UserProfile from './screens/UserProfile';
 import SubscriptionScreen from './screens/SubscriptionScreen';
 import SubscriptionList from './screens/SubscriptionList';
+import AdminUsers from './screens/AdminUsers';
+import AdminApplications from './screens/AdminApplications';
 import ProtectedRoute from './components/ProtectedRoute';
 
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
@@ -43,6 +45,8 @@ function App() {
 
             <Route path='/subscriptions' element={<ProtectedRoute><SubscriptionScreen /></ProtectedRoute>} />
             <Route path='/admin/subscriptions' element={<ProtectedRoute><SubscriptionList /></ProtectedRoute>} />
+            <Route path='/admin/users' element={<ProtectedRoute><AdminUsers /></ProtectedRoute>} />
+            <Route path='/admin/applications' element={<ProtectedRoute><AdminApplications /></ProtectedRoute>} />
           </Routes>
         </Container>
 

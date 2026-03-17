@@ -22,11 +22,20 @@ function Header() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
             {userInfo ? (
-              <NavDropdown title={userInfo.first_name || userInfo.username || userInfo.email || userInfo.email} id='username'>
-                <LinkContainer to="/profile"><NavDropdown.Item>Profile</NavDropdown.Item></LinkContainer>
-                <LinkContainer to="/seller/dashboard"><NavDropdown.Item>Seller Dashboard</NavDropdown.Item></LinkContainer>
-                <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
-              </NavDropdown>
+              <>
+                {userInfo.role === 'Admin' && (
+                  <NavDropdown title='Admin' id='admin-dropdown'>
+                    <LinkContainer to="/admin/users"><NavDropdown.Item>Users</NavDropdown.Item></LinkContainer>
+                    <LinkContainer to="/admin/applications"><NavDropdown.Item>Applications</NavDropdown.Item></LinkContainer>
+                    <LinkContainer to="/admin/subscriptions"><NavDropdown.Item>Subscriptions</NavDropdown.Item></LinkContainer>
+                  </NavDropdown>
+                )}
+                <NavDropdown title={userInfo.first_name || userInfo.username || userInfo.email || userInfo.email} id='username'>
+                  <LinkContainer to="/profile"><NavDropdown.Item>Profile</NavDropdown.Item></LinkContainer>
+                  <LinkContainer to="/seller/dashboard"><NavDropdown.Item>Seller Dashboard</NavDropdown.Item></LinkContainer>
+                  <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
+                </NavDropdown>
+              </>
             ) : (
               <>
                 <LinkContainer to="/signin"><Nav.Link>Sign In</Nav.Link></LinkContainer>

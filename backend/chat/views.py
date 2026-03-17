@@ -6,7 +6,6 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 import json
 import os
-from google import genai
 import logging
 import traceback
 
@@ -168,6 +167,12 @@ def chat_endpoint(request):
     if not api_key:
         logger.error('GENAI_API_KEY not set in environment or .env; cannot call AI service')
         return Response({'error': 'AI service not configured'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    try:
+        from google import genai
+    except Exception:
+        logger.exception('google.genai package not available')
+        return Response({'error': 'AI client library not installed on server'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
     client = genai.Client(api_key=api_key)
 
     try:
