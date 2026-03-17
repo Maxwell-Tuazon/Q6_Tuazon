@@ -8,7 +8,8 @@ import { logout } from '../actions/authActions'
 function Header() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const userInfo = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null
+  const rawUserInfo = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null
+  const userInfo = rawUserInfo && rawUserInfo.user ? rawUserInfo.user : rawUserInfo
 
   const logoutHandler = () => {
     dispatch(logout())
@@ -21,7 +22,7 @@ function Header() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
             {userInfo ? (
-              <NavDropdown title={userInfo.first_name || userInfo.username || userInfo.email} id='username'>
+              <NavDropdown title={userInfo.first_name || userInfo.username || userInfo.email || userInfo.email} id='username'>
                 <LinkContainer to="/profile"><NavDropdown.Item>Profile</NavDropdown.Item></LinkContainer>
                 <LinkContainer to="/seller/dashboard"><NavDropdown.Item>Seller Dashboard</NavDropdown.Item></LinkContainer>
                 <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>

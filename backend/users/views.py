@@ -17,6 +17,26 @@ class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = RegisterSerializer
+    
+    def create(self, request, *args, **kwargs):
+        # create user using serializer
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        # create JWT tokens for the new user
+        token_serializer = MyTokenObtainPairSerializer()
+        # MyTokenObtainPairSerializer expects credentials; instead build token directly
+        from rest_framework_simplejwt.tokens import RefreshToken
+        refresh = RefreshToken.for_user(user)
+        access = str(refresh.access_token)
+        refresh_token = str(refresh)
+        data = {
+            'access': access,
+            'refresh': refresh_token,
+            'user': UserSerializer(user).data,
+        }
+        headers = self.get_success_headers(serializer.data)
+        return Response(data, status=201, headers=headers)
 
 
 class UserProfileView(generics.RetrieveUpdateAPIView):

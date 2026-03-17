@@ -15,6 +15,16 @@ from datetime import timedelta
 import os
 from pathlib import Path
 
+# Load environment variables from .env if python-dotenv is available
+try:
+    from dotenv import load_dotenv
+    ENV_PATH = Path(__file__).resolve().parent.parent / '.env'
+    if ENV_PATH.exists():
+        load_dotenv(dotenv_path=ENV_PATH)
+except Exception:
+    # python-dotenv not installed or failed to load; environment variables must be set externally
+    pass
+
 from django.conf import settings
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
