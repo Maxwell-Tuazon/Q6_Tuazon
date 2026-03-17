@@ -1,6 +1,7 @@
 import os
 import random
 from django.db import models
+from django.conf import settings
 
 
 # helpers at module scope so they exist when the model is imported
@@ -19,7 +20,7 @@ def upload_image_path(instance, filename):
 
 # Create your models here.
 class Product(models.Model):
-    user = models.ForeignKey('auth.User', on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=200, null=True, blank=True)
     image = models.ImageField(upload_to=upload_image_path, null=True, blank=True)
     brand = models.CharField(max_length=200, null=True, blank=True)
