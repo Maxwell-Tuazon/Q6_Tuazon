@@ -13,12 +13,23 @@ class SubmitApplicationView(generics.CreateAPIView):
     serializer_class = SellerApplicationSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    def create(self, request, *args, **kwargs):
+        # prevent Admin users from applying as sellers
+        try:
+            role = getattr(request.user, 'role', None)
+        except Exception:
+            role = None
+        if role == 'Admin':
+            return Response({'detail': 'Admins cannot apply to be sellers.'}, status=status.HTTP_403_FORBIDDEN)
+        return super().create(request, *args, **kwargs)
+
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
 
 class ListApplicationView(generics.ListAPIView):
-    queryset = SellerApplication.objects.all().order_by('-created_at')
+    # only show pending applications in admin list
+    queryset = SellerApplication.objects.filter(status='pending').order_by('-created_at')
     serializer_class = SellerApplicationSerializer
     permission_classes = [permissions.IsAdminUser]
 
@@ -39,7 +50,8 @@ class ApproveApplicationView(APIView):
         app.user.role = 'Seller'
         app.user.merchant_id = merchant_id
         app.user.save()
-        app.save()
+        # remove the application record now that it's resolved
+        app.delete()
         return Response({'detail': 'approved'})
 
 
@@ -49,7 +61,9 @@ class DeclineApplicationView(APIView):
     def post(self, request, pk):
         app = get_object_or_404(SellerApplication, pk=pk)
         reason = request.data.get('reason', '')
+        # mark declined then remove the application record
         app.status = 'declined'
         app.decline_reason = reason
         app.save()
+        app.delete()
         return Response({'detail': 'declined'})

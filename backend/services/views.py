@@ -1,4 +1,6 @@
 from rest_framework import generics, permissions
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from .models import Service
@@ -60,15 +62,22 @@ class ServiceDetailView(generics.RetrieveAPIView):
         return Response({'detail': 'Not found.'}, status=404)
 
 
-class SellerServiceManageView(generics.ListCreateAPIView):
-    serializer_class = ServiceSerializer
+class SellerServiceManageView(APIView):
+    """Manage services for the logged-in seller: list and create (supports file upload)."""
     permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
 
-    def get_queryset(self):
-        return Service.objects.filter(seller=self.request.user)
+    def get(self, request, format=None):
+        qs = Service.objects.filter(seller=request.user).order_by('-id')
+        serializer = ServiceSerializer(qs, many=True, context={'request': request})
+        return Response(serializer.data)
 
-    def perform_create(self, serializer):
-        serializer.save(seller=self.request.user)
+    def post(self, request, format=None):
+        serializer = ServiceSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save(seller=request.user)
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
 
 
 class SellerServiceDetailView(generics.RetrieveUpdateDestroyAPIView):

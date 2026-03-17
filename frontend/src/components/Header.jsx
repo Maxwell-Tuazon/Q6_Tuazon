@@ -24,7 +24,7 @@ function Header() {
             {userInfo ? (
               <>
                 {userInfo.role === 'Admin' && (
-                  <NavDropdown title='Admin' id='admin-dropdown'>
+                  <NavDropdown title='Admin View' id='admin-dropdown'>
                     <LinkContainer to="/admin/users"><NavDropdown.Item>Users</NavDropdown.Item></LinkContainer>
                     <LinkContainer to="/admin/applications"><NavDropdown.Item>Applications</NavDropdown.Item></LinkContainer>
                     <LinkContainer to="/admin/subscriptions"><NavDropdown.Item>Subscriptions</NavDropdown.Item></LinkContainer>
@@ -46,7 +46,7 @@ function Header() {
             )}
           <Nav className="me-auto">
             <LinkContainer to="/"><Nav.Link>Home</Nav.Link></LinkContainer>
-            {!(userInfo && userInfo.role === 'Seller') && (
+            {!(userInfo && (userInfo.role === 'Seller' || userInfo.role === 'Admin')) && (
               <LinkContainer to="/apply-seller"><Nav.Link>Apply Seller</Nav.Link></LinkContainer>
             )}
             <LinkContainer to="/subscriptions"><Nav.Link>Subscriptions</Nav.Link></LinkContainer>

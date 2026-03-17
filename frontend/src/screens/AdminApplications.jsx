@@ -75,7 +75,6 @@ export default function AdminApplications() {
         <thead>
           <tr>
             <th>User</th>
-            <th>Company</th>
             <th>Submitted</th>
             <th>Message</th>
             <th></th>
@@ -84,8 +83,7 @@ export default function AdminApplications() {
         <tbody>
           {apps.map(a => (
             <tr key={a.id}>
-              <td>{a.user && a.user.email}</td>
-              <td>{a.company_name}</td>
+              <td>{a.user ? `${a.user.first_name || ''} ${a.user.last_name || ''}`.trim() || a.user.email : '—'}</td>
               <td>{new Date(a.created_at).toLocaleString()}</td>
               <td>{a.message}</td>
               <td>
