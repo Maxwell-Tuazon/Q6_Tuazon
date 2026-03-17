@@ -9,7 +9,7 @@ services = [
         'rating': 4.7,
         'price': 120.00,
         'duration_of_service': '2 hours',
-        'sample_image': '/static/images/rodent_removal.jpg',
+        'sample_image': '/images/rodent_removal.svg',
         'seller': {'first_name': 'John', 'last_name': 'Doe', 'email': 'john.doe@example.com'},
     },
     {
@@ -19,7 +19,7 @@ services = [
         'rating': 4.6,
         'price': 150.00,
         'duration_of_service': '3 hours',
-        'sample_image': '/static/images/bird_control.jpg',
+        'sample_image': '/images/bird_control.svg',
         'seller': {'first_name': 'Maria', 'last_name': 'Garcia', 'email': 'maria.garcia@example.com'},
     },
     {
@@ -29,7 +29,7 @@ services = [
         'rating': 4.8,
         'price': 350.00,
         'duration_of_service': '4 hours',
-        'sample_image': '/static/images/termite_treatment.jpg',
+        'sample_image': '/images/termite_treatment.svg',
         'seller': {'first_name': 'Liam', 'last_name': 'Nguyen', 'email': 'liam.nguyen@example.com'},
     },
     {
@@ -39,7 +39,7 @@ services = [
         'rating': 4.5,
         'price': 200.00,
         'duration_of_service': '3-5 hours',
-        'sample_image': '/static/images/wildlife_trapping.jpg',
+        'sample_image': '/images/wildlife_trapping.svg',
         'seller': {'first_name': 'Aisha', 'last_name': 'Khan', 'email': 'aisha.khan@example.com'},
     },
     {
@@ -49,7 +49,7 @@ services = [
         'rating': 4.4,
         'price': 80.00,
         'duration_of_service': '1.5 hours',
-        'sample_image': '/static/images/insect_control.jpg',
+        'sample_image': '/images/insect_control.svg',
         'seller': {'first_name': 'Carlos', 'last_name': 'Mendoza', 'email': 'carlos.mendoza@example.com'},
     },
 ]

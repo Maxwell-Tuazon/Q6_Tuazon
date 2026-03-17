@@ -42,9 +42,9 @@ export default function DetailScreen() {
                         <ListGroup.Item>
                             Duration: {service.duration_of_service}
                         </ListGroup.Item>
-                        <ListGroup.Item>
-                            Expert: {service.seller && (service.seller.first_name + ' ' + service.seller.last_name)}
-                        </ListGroup.Item>
+                            <ListGroup.Item>
+                                Expert: {service.seller_first_name || (service.seller && (service.seller.first_name + ' ' + service.seller.last_name)) || service.seller_email}
+                            </ListGroup.Item>
                         <ListGroup.Item>
                             Description: {service.description}
                         </ListGroup.Item>

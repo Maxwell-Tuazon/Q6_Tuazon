@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="240">
+  <rect width="100%" height="100%" fill="#fff3e0"/>
+  <g fill="#6c757d">
+    <rect x="60" y="100" width="120" height="60" rx="8" />
+    <rect x="220" y="100" width="120" height="60" rx="8" />
+    <path d="M180 80 l20 40 l20 -40" stroke="#6c757d" stroke-width="6" fill="none" />
+  </g>
+  <text x="200" y="40" font-size="20" text-anchor="middle" fill="#ef6c00">Wildlife Trapping</text>
+  <text x="200" y="215" font-size="12" text-anchor="middle" fill="#6c757d">Pest & Wildlife Control — sample image</text>
+</svg>

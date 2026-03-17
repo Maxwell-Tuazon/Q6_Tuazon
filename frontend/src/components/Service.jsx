@@ -6,14 +6,14 @@ import { Link } from 'react-router-dom'
 function Service({ service }) {
   return (
     <Card className='my-3 p-3 rounded'>
-        <Link to={`/service/${service._id}`}>
-            <Card.Img src={service.sample_image || service.image} />
+        <Link to={`/service/${service.id || service._id}`}>
+          <Card.Img src={service.sample_image || service.image || service.image_url} />
         </Link>
 
         <Card.Body>
-            <Link to={`/service/${service._id}`}>
+            <Link to={`/service/${service.id || service._id}`}>
                 <Card.Title as='div'>
-                    <strong>{service.service_name || service.name}</strong>
+                <strong>{service.service_name || service.name}</strong>
                 </Card.Title>
             </Link>
 

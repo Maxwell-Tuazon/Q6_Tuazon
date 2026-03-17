@@ -35,7 +35,7 @@ function HomeScreen() {
                 services && services.length > 0 ? (
                     <Row>
                         {services.map((service) => (
-                            <Col key={service._id} sm={12} md={6} lg={4} xl={3}>
+                            <Col key={service.id || service._id} sm={12} md={6} lg={4} xl={3}>
                                 <Service service={service} />
                             </Col>
                         ))}
