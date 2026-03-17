@@ -44,9 +44,9 @@ export default function UserProfile() {
           <div>No orders yet</div>
         ) : (
           orders.map(o => (
-            <Card key={o._id} className='mb-2'>
+            <Card key={o.id} className='mb-2'>
               <ListGroup variant='flush'>
-                <ListGroup.Item>Service: {o.service && (o.service.service_name || o.service.name)}</ListGroup.Item>
+                <ListGroup.Item>Service: {o.service_name || (o.service && (o.service.service_name || o.service.name)) || 'Unknown'}</ListGroup.Item>
                 <ListGroup.Item>Price: ${o.price_paid}</ListGroup.Item>
                 <ListGroup.Item>Date: {new Date(o.date_purchased).toLocaleString()}</ListGroup.Item>
               </ListGroup>

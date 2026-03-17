@@ -51,9 +51,11 @@ export default function AdminUsers() {
     try {
       const payload = {
         first_name: editUser.first_name,
+        username: editUser.username,
         last_name: editUser.last_name,
         email: editUser.email,
         role: editUser.role,
+        merchant_id: editUser.merchant_id,
       }
       const { data } = await axios.put(`/api/v1/users/admin/users/${editUser.id}/`, payload)
       setUsers(users.map(u => (u.id === data.id ? data : u)))
@@ -73,6 +75,7 @@ export default function AdminUsers() {
             <th>First Name</th>
             <th>Last Name</th>
             <th>Email</th>
+            <th>Merchant ID</th>
             <th>Role</th>
             <th></th>
           </tr>
@@ -83,6 +86,7 @@ export default function AdminUsers() {
               <td>{u.first_name}</td>
               <td>{u.last_name}</td>
               <td>{u.email}</td>
+              <td>{u.merchant_id || ''}</td>
               <td>{u.role}</td>
               <td>
                 <Button size='sm' variant='outline-primary' onClick={() => openEdit(u)}>Edit</Button>{' '}
@@ -105,6 +109,10 @@ export default function AdminUsers() {
                 <Form.Control value={editUser.first_name || ''} onChange={(e) => setEditUser({...editUser, first_name: e.target.value})} />
               </Form.Group>
               <Form.Group className='mb-2'>
+                <Form.Label>Username</Form.Label>
+                <Form.Control value={editUser.username || ''} onChange={(e) => setEditUser({...editUser, username: e.target.value})} />
+              </Form.Group>
+              <Form.Group className='mb-2'>
                 <Form.Label>Last Name</Form.Label>
                 <Form.Control value={editUser.last_name || ''} onChange={(e) => setEditUser({...editUser, last_name: e.target.value})} />
               </Form.Group>
@@ -119,6 +127,10 @@ export default function AdminUsers() {
                   <option value='Seller'>Seller</option>
                   <option value='Admin'>Admin</option>
                 </Form.Select>
+              </Form.Group>
+              <Form.Group className='mb-2'>
+                <Form.Label>Merchant ID</Form.Label>
+                <Form.Control value={editUser.merchant_id || ''} onChange={(e) => setEditUser({...editUser, merchant_id: e.target.value})} />
               </Form.Group>
             </Form>
           )}

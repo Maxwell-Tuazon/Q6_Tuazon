@@ -9,6 +9,21 @@ import {Provider} from 'react-redux'
 import store from './store'
 import axios from 'axios'
 
+// Suppress noisy cross-origin "Script error." messages from PayPal SDK
+const _suppressPaypalScriptError = (e) => {
+  try {
+    if (e && e.message === 'Script error.' && e.filename && e.filename.includes('paypal')) {
+      console.warn('Suppressed cross-origin Script error. from PayPal SDK')
+      e.preventDefault && e.preventDefault()
+      e.stopImmediatePropagation && e.stopImmediatePropagation()
+      return true
+    }
+  } catch (err) {
+    // ignore
+  }
+}
+window.addEventListener('error', _suppressPaypalScriptError, true)
+
 // Initialize axios Authorization header from localStorage if user is already logged in
 const rawUserInfo = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null
 const token = rawUserInfo && (rawUserInfo.access || (rawUserInfo.user && rawUserInfo.user.access))
