@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Row, Col } from 'react-bootstrap'
-import Product from '../components/Product'
+import Service from '../components/Service'
 import axios from 'axios'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
@@ -36,7 +36,7 @@ function HomeScreen() {
                     <Row>
                         {services.map((service) => (
                             <Col key={service._id} sm={12} md={6} lg={4} xl={3}>
-                                <Product product={service} />
+                                <Service service={service} />
                             </Col>
                         ))}
                     </Row>
