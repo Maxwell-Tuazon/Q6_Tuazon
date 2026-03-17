@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.env
+.env
+venv/
+env/
+myenv/
+
+# Django
+*.sqlite3
+*.sqlite3-journal
+/static_cdn/
+/static_root/
+/media_root/
+/media/
+/staticfiles/
+*.log
+
+# Node
+node_modules/
+frontend/node_modules/
+frontend/build/
+npm-debug.log*
+yarn-error.log*
+yarn.lock
+!/frontend/package-lock.json
+
+# IDEs
+.vscode/
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage
+htmlcov/
+.coverage
+coverage.xml
+
+# Misc
+*.egg-info/
+build/
+dist/
