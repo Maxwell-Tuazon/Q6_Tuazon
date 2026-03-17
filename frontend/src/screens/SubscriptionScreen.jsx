@@ -2,6 +2,11 @@ import React, { useEffect, useState, useRef } from 'react'
 import { Row, Col, Card, Alert } from 'react-bootstrap'
 import axios from 'axios'
 
+function getAccessFromStorage() {
+  const tokenData = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null
+  return tokenData && (tokenData.access || (tokenData.user && tokenData.user.access))
+}
+
 export default function SubscriptionScreen() {
   const [tiers, setTiers] = useState([])
   const [error, setError] = useState(null)
@@ -57,8 +62,19 @@ export default function SubscriptionScreen() {
           },
           onApprove: async function (data, actions) {
             try {
-              await axios.post('/api/v1/subscriptions/activate/', { subscription_id: data.subscriptionID, plan_id: planId })
+              const access = getAccessFromStorage()
+              const headers = { 'Content-Type': 'application/json' }
+              if (access) headers['Authorization'] = `Bearer ${access}`
+              await axios.post('/api/v1/subscriptions/activate/', { subscription_id: data.subscriptionID, plan_id: planId }, { headers })
               setSuccess(`Subscribed to ${t.name}`)
+              // fetch current subscription usage and broadcast to other components
+              try {
+                const res = await axios.get('/api/v1/subscriptions/me/', { headers })
+                if (res.status === 200 && res.data && typeof window !== 'undefined') {
+                  const usage = res.data.usage_left
+                  window.dispatchEvent(new CustomEvent('subscriptionUpdated', { detail: { usage_left: usage } }))
+                }
+              } catch (ignored) {}
             } catch (e) {
               console.error('Activation failed', e)
               setError('Subscription activation failed')

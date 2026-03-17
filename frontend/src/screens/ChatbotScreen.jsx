@@ -41,6 +41,18 @@ function ChatbotScreen() {
     fetchUsage()
   }, [])
 
+  // Listen for subscription updates from other parts of the app
+  useEffect(() => {
+    function handler(e) {
+      try {
+        const usage = e && e.detail && typeof e.detail.usage_left !== 'undefined' ? e.detail.usage_left : null
+        if (usage !== null) setUsageLeft(usage)
+      } catch (err) {}
+    }
+    window.addEventListener('subscriptionUpdated', handler)
+    return () => window.removeEventListener('subscriptionUpdated', handler)
+  }, [])
+
   const handleSend = async (e) => {
     e.preventDefault();
     if (!input.trim()) return;

@@ -127,9 +127,18 @@ def chat_endpoint(request):
     if not subs or subs.usage_left <= 0:
         return Response({'error': 'No active subscription or usage exhausted'}, status=402)
 
-    # decrement usage
-    subs.usage_left = subs.usage_left - 1
-    subs.save()
+    # decrement usage atomically to avoid race conditions (use F expression)
+    try:
+        from django.db.models import F
+        updated = UserSubscription.objects.filter(pk=subs.pk, usage_left__gt=0).update(usage_left=F('usage_left') - 1)
+        if not updated:
+            return Response({'error': 'No active subscription or usage exhausted'}, status=402)
+        # refresh from db so subsequent code / responses read the new value
+        subs.refresh_from_db()
+    except Exception:
+        # fallback to simple decrement on unexpected errors
+        subs.usage_left = subs.usage_left - 1
+        subs.save()
 
     api_key = os.getenv('GENAI_API_KEY')
     if not api_key:
