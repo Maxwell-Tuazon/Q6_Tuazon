@@ -9,6 +9,8 @@ from django.views.decorators.http import require_http_methods
 from google import genai
 import logging
 import traceback
+from django.conf import settings
+from subscriptions.models import UserSubscription
 
 logger = logging.getLogger(__name__)
 
@@ -30,6 +32,19 @@ def chat_endpoint(request):
     message = payload.get('message') or payload.get('prompt')
     if not message:
         return JsonResponse({'error': 'Missing "message" field'}, status=400)
+
+    # Check subscription usage: user must be authenticated and have active subscription with usage_left
+    user = getattr(request, 'user', None)
+    if not user or not user.is_authenticated:
+        return JsonResponse({'error': 'Authentication required'}, status=401)
+
+    subs = UserSubscription.objects.filter(user=user, is_active=True).order_by('-subscribed_at').first()
+    if not subs or subs.usage_left <= 0:
+        return JsonResponse({'error': 'No active subscription or usage exhausted'}, status=402)
+
+    # decrement usage
+    subs.usage_left = subs.usage_left - 1
+    subs.save()
 
     client = genai.Client(api_key="")
 

@@ -20,15 +20,18 @@ from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
 
-from base.views import MyTokenObtainPairView
 from django.urls import include as include_url
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('base.urls')),
+    path('api/v1/users/', include('users.urls')),
+    path('api/v1/applications/', include('applications.urls')),
+    path('api/v1/services/', include('services.urls')),
+    path('api/v1/orders/', include('orders.urls')),
+    path('api/v1/subscriptions/', include('subscriptions.urls')),
+    path('api/v1/chat/', include('chat.urls')),
     path('api/', include('base.urls')),
-    path('api/chat/', include('chat.urls')),
-    path('users/login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
 ]
 
 if settings.DEBUG:
