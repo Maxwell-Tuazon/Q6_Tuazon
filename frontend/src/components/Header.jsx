@@ -32,7 +32,9 @@ function Header() {
                 )}
                 <NavDropdown title={userInfo.first_name || userInfo.username || userInfo.email || userInfo.email} id='username'>
                   <LinkContainer to="/profile"><NavDropdown.Item>Profile</NavDropdown.Item></LinkContainer>
-                  <LinkContainer to="/seller/dashboard"><NavDropdown.Item>Seller Dashboard</NavDropdown.Item></LinkContainer>
+                  {userInfo.role === 'Seller' && (
+                    <LinkContainer to="/seller/dashboard"><NavDropdown.Item>Seller Dashboard</NavDropdown.Item></LinkContainer>
+                  )}
                   <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
                 </NavDropdown>
               </>
@@ -44,7 +46,9 @@ function Header() {
             )}
           <Nav className="me-auto">
             <LinkContainer to="/"><Nav.Link>Home</Nav.Link></LinkContainer>
-            <LinkContainer to="/apply-seller"><Nav.Link>Apply Seller</Nav.Link></LinkContainer>
+            {!(userInfo && userInfo.role === 'Seller') && (
+              <LinkContainer to="/apply-seller"><Nav.Link>Apply Seller</Nav.Link></LinkContainer>
+            )}
             <LinkContainer to="/subscriptions"><Nav.Link>Subscriptions</Nav.Link></LinkContainer>
             <LinkContainer to="/chat"><Nav.Link>AI Chatbot</Nav.Link></LinkContainer>
           </Nav>
