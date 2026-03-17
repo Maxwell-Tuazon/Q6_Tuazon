@@ -46,6 +46,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'chat.apps.ChatConfig',
+    'users.apps.UsersConfig',
+    'applications.apps.ApplicationsConfig',
+    'services.apps.ServicesConfig',
+    'orders.apps.OrdersConfig',
+    'subscriptions.apps.SubscriptionsConfig',
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -141,6 +146,9 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
+
+# Use custom user model
+AUTH_USER_MODEL = 'users.CustomUser'
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
