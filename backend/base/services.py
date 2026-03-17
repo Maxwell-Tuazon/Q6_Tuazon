@@ -1,0 +1,55 @@
+# Dummy service entries for the Pest & Wildlife Control demo site.
+# These are used as fallback/static sample data and are merged with DB entries.
+
+services = [
+    {
+        '_id': 's1',
+        'service_name': 'Rodent Removal',
+        'description': 'Humane rodent removal and exclusion for homes and businesses. Includes inspection and proofing.',
+        'rating': 4.7,
+        'price': 120.00,
+        'duration_of_service': '2 hours',
+        'sample_image': '/static/images/rodent_removal.jpg',
+        'seller': {'first_name': 'John', 'last_name': 'Doe', 'email': 'john.doe@example.com'},
+    },
+    {
+        '_id': 's2',
+        'service_name': 'Bird Control & Nest Removal',
+        'description': 'Safe bird nest removal, deterrents installation, and clean-up for roofs and eaves.',
+        'rating': 4.6,
+        'price': 150.00,
+        'duration_of_service': '3 hours',
+        'sample_image': '/static/images/bird_control.jpg',
+        'seller': {'first_name': 'Maria', 'last_name': 'Garcia', 'email': 'maria.garcia@example.com'},
+    },
+    {
+        '_id': 's3',
+        'service_name': 'Termite Inspection & Treatment',
+        'description': 'Comprehensive termite inspection with localized treatment options and prevention advice.',
+        'rating': 4.8,
+        'price': 350.00,
+        'duration_of_service': '4 hours',
+        'sample_image': '/static/images/termite_treatment.jpg',
+        'seller': {'first_name': 'Liam', 'last_name': 'Nguyen', 'email': 'liam.nguyen@example.com'},
+    },
+    {
+        '_id': 's4',
+        'service_name': 'Wildlife Trapping & Relocation',
+        'description': 'Licensed wildlife trapping and humane relocation for raccoons, possums and similar animals.',
+        'rating': 4.5,
+        'price': 200.00,
+        'duration_of_service': '3-5 hours',
+        'sample_image': '/static/images/wildlife_trapping.jpg',
+        'seller': {'first_name': 'Aisha', 'last_name': 'Khan', 'email': 'aisha.khan@example.com'},
+    },
+    {
+        '_id': 's5',
+        'service_name': 'Insect Control (Cockroaches & Ants)',
+        'description': 'Fast-acting insect control and follow-up visits for persistent infestations.',
+        'rating': 4.4,
+        'price': 80.00,
+        'duration_of_service': '1.5 hours',
+        'sample_image': '/static/images/insect_control.jpg',
+        'seller': {'first_name': 'Carlos', 'last_name': 'Mendoza', 'email': 'carlos.mendoza@example.com'},
+    },
+]
