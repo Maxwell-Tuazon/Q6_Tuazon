@@ -74,18 +74,21 @@ export default function SubscriptionScreen() {
     })
   }, [tiers])
 
+  // Only display the three standard tiers (Basic, Pro, Enterprise)
+  const visibleTiers = tiers.filter(t => ['Basic','Pro','Enterprise'].includes(t.name)).slice(0,3)
+
   return (
     <>
       {error && <Alert variant='danger'>{error}</Alert>}
       {success && <Alert variant='success'>{success}</Alert>}
       <Row>
-        {tiers.map(t => (
+        {visibleTiers.map(t => (
           <Col md={4} key={t.id}>
             <Card className='mb-3'>
               <Card.Body>
                 <Card.Title>{t.name}</Card.Title>
                 <Card.Text>Price: ${t.price}/month</Card.Text>
-                <Card.Text>Chatbot usages: {t.max_usage}</Card.Text>
+                <Card.Text>Uses: {t.max_usage}</Card.Text>
                 {t.paypal_plan_id ? (
                   <div id={`paypal-button-container-${t.id}`} />
                 ) : (
