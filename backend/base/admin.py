@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import  Product
 
-admin.site.register(Product)
-# Register your models here.
+# Customize Django admin branding
+admin.site.site_header = 'Pest & Wildlife Control'
+admin.site.site_title = 'Pest & Wildlife Control Admin'
+admin.site.index_title = 'Administration'

@@ -7,57 +7,28 @@ from rest_framework.response import Response
 from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
 from .models import *
-try:
-    from . import products as products_module
-    # Use the products list from the module when it exists; allow it to be commented out.
-    static_products = getattr(products_module, 'products', [])
-except Exception:
-    # If import fails for any reason, fall back to an empty list so the app keeps working.
-    static_products = []
+static_products = []
 
-from .serializers import ProductSerializer
 from rest_framework import serializers
 
 
 # Create your views here.
 @api_view(['GET'])
 def getRoutes(request):
+    # Advertise the current public API surfaces. Product endpoints moved to /api/v1/services/.
     routes = [
-        '/api/products/',
-        '/api/products/<id>/',
-        '/api/users/login/',
-        '/api/users/register/',
+        '/api/v1/services/',
+        '/api/v1/services/<id>/',
+        '/api/v1/users/login/',
+        '/api/v1/users/register/',
     ]
     return JsonResponse(routes, safe=False)
 
 
 @api_view(['GET'])
-def getProducts(request):
-    products = Product.objects.all().order_by('-createdAt')
-    serializer = ProductSerializer(products, many=True)
-    db_products = list(serializer.data)
-
-    # Return DB products plus static products together (no deduplication)
-    combined = db_products + static_products
-    return Response(combined)
-
-
-@api_view(['GET'])
 def getProduct(request, pk):
-    # If pk is numeric, try DB first; otherwise treat as static id
-    if str(pk).isdigit():
-        try:
-            product = Product.objects.get(_id=pk)
-            serializer = ProductSerializer(product, many=False)
-            return Response(serializer.data)
-        except Product.DoesNotExist:
-            raise Http404
-    else:
-        # static product id (e.g. 's1')
-        for item in static_products:
-            if item['_id'] == str(pk):
-                return Response(item)
-        raise Http404
+    # Legacy endpoint removed — use /api/v1/services/<id>/ from services app.
+    return Response({'detail': 'Endpoint moved. Use /api/v1/services/<id>/'}, status=410)
     
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -142,61 +113,9 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 
 # DRF ViewSets for API
-class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all().order_by('-createdAt')
-    serializer_class = ProductSerializer
-
-    def get_permissions(self):
-        # Allow anyone to read, but require auth for write actions
-        if self.action in ['list', 'retrieve']:
-            permission_classes = [permissions.AllowAny]
-        else:
-            permission_classes = [permissions.IsAuthenticated]
-        return [p() for p in permission_classes]
-
-    def list(self, request, *args, **kwargs):
-        try:
-            # Return DB products plus static products together (no deduplication)
-            products = Product.objects.all().order_by('-createdAt')
-            serializer = ProductSerializer(products, many=True)
-            db_products = list(serializer.data)
-
-            # Ensure static_products is a list
-            extras = static_products if isinstance(static_products, list) else []
-            combined = db_products + extras
-            return DRFResponse(combined)
-        except Exception as e:
-            print('Error in ProductViewSet.list:', e)
-            traceback.print_exc()
-            return DRFResponse({'detail': 'Server error while listing products', 'error': str(e)}, status=500)
-
-    def retrieve(self, request, pk=None, *args, **kwargs):
-        try:
-            # If pk is numeric, try DB first; otherwise treat as static id
-            if str(pk).isdigit():
-                try:
-                    product = Product.objects.get(_id=pk)
-                    serializer = ProductSerializer(product, many=False)
-                    return DRFResponse(serializer.data)
-                except Product.DoesNotExist:
-                    # fall through to 404
-                    pass
-
-            # static product id (e.g. 's1')
-            extras = static_products if isinstance(static_products, list) else []
-            for item in extras:
-                try:
-                    if item and item.get('_id') == str(pk):
-                        return DRFResponse(item)
-                except Exception:
-                    # skip malformed static entries
-                    continue
-
-            return DRFResponse({'detail': 'Not found.'}, status=404)
-        except Exception as e:
-            print('Error in ProductViewSet.retrieve:', e)
-            traceback.print_exc()
-            return DRFResponse({'detail': 'Server error while retrieving product', 'error': str(e)}, status=500)
+# Product endpoints have been removed in favor of the `services` app.
+# If you need to migrate existing product data into services, run the
+# management command `python manage.py migrate_products_to_services`.
 
 
 class UserViewSet(viewsets.ViewSet):

@@ -3,7 +3,7 @@ from . import views
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register(r'products', views.ProductViewSet, basename='product')
+# Legacy product endpoints replaced by the `services` app. Keep user viewset here.
 router.register(r'users', views.UserViewSet, basename='user')
 
 urlpatterns = [
