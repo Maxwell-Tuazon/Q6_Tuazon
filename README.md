@@ -1,4 +1,4 @@
-# Quiz_6
+# Quiz_6 commit test
 
 This repository contains a Django backend and a React frontend for the Quiz_6 project.
 
