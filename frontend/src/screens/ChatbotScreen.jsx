@@ -24,18 +24,31 @@ function ChatbotScreen() {
     setSending(true);
 
     try {
-      const res = await fetch('/api/chat/', {
+      const tokenData = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null
+      const access = tokenData && (tokenData.access || (tokenData.user && tokenData.user.access))
+      const headers = { 'Content-Type': 'application/json' }
+      if (access) headers['Authorization'] = `Bearer ${access}`
+
+      const res = await fetch('/api/v1/chat/ask/', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ message: userMsg.text }),
       });
+
       const data = await res.json();
-      const botMsg = {
-        id: nextId.current++,
-        sender: 'AI Assistant',
-        text: data.reply || 'No reply from server',
-      };
-      setMessages((m) => [...m, botMsg]);
+
+      if (!res.ok) {
+        const errMsg = data.error || data.detail || `Status ${res.status}`
+        const botMsg = { id: nextId.current++, sender: 'AI Assistant', text: `Error: ${errMsg}` }
+        setMessages((m) => [...m, botMsg]);
+      } else {
+        const botMsg = {
+          id: nextId.current++,
+          sender: 'AI Assistant',
+          text: data.reply || 'No reply from server',
+        };
+        setMessages((m) => [...m, botMsg]);
+      }
     } catch (err) {
       const botMsg = { id: nextId.current++, sender: 'AI Assistant', text: `Error: ${err.message}` };
       setMessages((m) => [...m, botMsg]);

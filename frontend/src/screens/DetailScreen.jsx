@@ -12,7 +12,7 @@ export default function DetailScreen() {
     useEffect(() => {
         async function fetchService() {
             try {
-                const { data } = await axios.get(`/api/services/${id}/`);
+                const { data } = await axios.get(`/api/v1/services/${id}/`);
                 setService(data);
             } catch (err) {
                 console.error(err);
